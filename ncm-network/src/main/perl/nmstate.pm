@@ -296,22 +296,24 @@ sub generate_vip_config {
     return $iface_cfg;
 }
 
-# find vlan id from either the name or device.
-# i.e eth0.123 will return 123. by checking iface name and device
-# returns vlan id.
+# find vlan id by parsing either the name or device, if they follow
+# the syntax intname[.]vlanid. '.' before the VLAN ID is optional
+# if the interface name contains no digit.
+# i.e. vlan123 will return 123 and eth0.123 will return 123. 
+# If there is no '.'i and the interface name ends with a number, this number
+# must be the VLAN ID.
 sub get_vlanid {
     my ($self, $iface, $device) = @_;
     my $vlanid = $iface;
     # a vlan interface can defined in two ways
-    # interface/name.vlanid/
-    # or interface/name/device=device.vlanid
-    # replace everything up-to and including . to get vlan id of the interface.
+    # interface/name[.i]vlanid/
+    # or interface/name/device=device[.]vlanid
     # favors ifacename.vlanid, then device.vlanid
-    $vlanid =~ s/^[^.]*.//;
+    $vlanid =~ s/^[a-z]++(\d+\.)?(?<id>\d+)$/$+{id}/;
     # if vlanid is empty here, lets check if device has vlan id.
     if ((! $vlanid) && ($device)) {
         $vlanid = $device;
-        $vlanid =~ s/^[^.]*.//;
+        $vlanid =~ s/^[a-z]++(\d+\.)?(?<id>\d+)$/$+{id}/;
     }
     return $vlanid;
 }

@@ -39,3 +39,11 @@ prefix "/system/network/interfaces/vlan0";
 "device" = "eth0.123";
 "physdev" = "eth0";
 "route/0" = dict("address", "1.2.3.4");
+
+# test vlan interface route on vlan for backward compatibily with network.pm
+# No dot between 'vlan' and VLAN ID
+"/system/network/interfaces/vlan123" = create("defaultinterface");
+prefix "/system/network/interfaces/vlan123";
+"device" = "vlan123";
+"physdev" = "eth0";
+"route/0" = dict("address", "1.2.3.4");
