@@ -47,7 +47,9 @@ use constant BOND_MASTER_STARTS_SLAVES => 0;
 sub iface_filename
 {
     my ($self, $iface) = @_;
-    return $self->IFCFG_DIR . "/$iface.yml";
+    my $filename = $self->IFCFG_DIR . "/$iface.yml";
+    $self->verbose("Interface $iface configuration file: $filename");
+    return $filename;
 }
 
 # Determine if this is a valid interface for ncm-network to manage,
